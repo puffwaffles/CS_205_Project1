@@ -28,6 +28,8 @@ class Graph {
         Node* getgoal();
         //Add new node to the graph based on move and blank value
         Node* addnode(int blankval, Node* node, int move);
+        //Add new node using given blank index, previous node, x and y
+        Node* addnode2(int blankval, Node* node, Graph* graph, int x, int y, int move);
         int getblanks();
 
 };

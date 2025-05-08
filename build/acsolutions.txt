@@ -1,0 +1,176 @@
+Expanding this node...
+
+The best state to expand with g(n) = 1 and h(n) = 9 is
+X X X   X   X   X X 
+2   3 4 5 6 7 8 9 1 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 2 and h(n) = 9 is
+X X X 4 X   X   X X 
+2   3   5 6 7 8 9 1 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 4 and h(n) = 9 is
+X X X 4 X   X   X X 
+2 3 5     6 7 8 9 1 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 5 and h(n) = 9 is
+X X X 4 X   X   X X 
+2 3 5 6     7 8 9 1 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 6 and h(n) = 9 is
+X X X 4 X 7 X   X X 
+2 3 5 6       8 9 1 
+
+Expanding this node...
+
+The best state to expand with g(n) = 7 and h(n) = 9 is
+X X X 4 X 7 X   X X 
+2 3 5 6 8       9 1 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 8 and h(n) = 9 is
+X X X 4 X 7 X   X X 
+2 3 5 6 8 9       1 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 9 and h(n) = 8 is
+X X X 4 X 7 X 1 X X 
+2 3 5 6 8 9         
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 10 and h(n) = 8 is
+X X X 4 X 7 X 1 X X 
+2 3 5 6 8         9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 11 and h(n) = 8 is
+X X X 4 X   X 1 X X 
+2 3 5 6 8       7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 12 and h(n) = 6 is
+X X X 4 X 1 X   X X 
+2 3 5 6 8       7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 13 and h(n) = 6 is
+X X X 4 X 1 X 8 X X 
+2 3 5 6         7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 14 and h(n) = 6 is
+X X X 4 X 1 X 8 X X 
+2 3 5         6 7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 15 and h(n) = 6 is
+X X X   X 1 X 8 X X 
+2 3 5       4 6 7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 16 and h(n) = 4 is
+X X X 1 X   X 8 X X 
+2 3 5       4 6 7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 17 and h(n) = 4 is
+X X X 1 X 5 X 8 X X 
+2 3         4 6 7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 18 and h(n) = 4 is
+X X X 1 X 5 X 8 X X 
+2         3 4 6 7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 19 and h(n) = 4 is
+X X X 1 X 5 X 8 X X 
+        2 3 4 6 7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 20 and h(n) = 0 is
+X X X   X 5 X 8 X X 
+1       2 3 4 6 7 9 
+
+
+Expanding this node...
+
+The best state to expand with g(n) = 21 and h(n) = 0 is
+X X X   X 5 X 8 X X 
+1 2       3 4 6 7 9 
+
+Expanding this node...
+
+The best state to expand with g(n) = 22 and h(n) = 0 is
+X X X   X 5 X 8 X X 
+1 2 3       4 6 7 9 
+
+Expanding this node...
+
+The best state to expand with g(n) = 23 and h(n) = 0 is
+X X X   X 5 X 8 X X 
+1 2 3 4       6 7 9 
+
+Expanding this node...
+
+The best state to expand with g(n) = 24 and h(n) = 0 is
+X X X   X   X 8 X X 
+1 2 3 4 5     6 7 9 
+
+Expanding this node...
+
+The best state to expand with g(n) = 25 and h(n) = 0 is
+X X X   X   X 8 X X 
+1 2 3 4 5 6     7 9 
+
+Expanding this node...
+
+The best state to expand with g(n) = 26 and h(n) = 0 is
+X X X   X   X 8 X X 
+1 2 3 4 5 6 7     9 
+
+Expanding this node...
+
+The best state to expand with g(n) = 27 and h(n) = 0 is
+X X X   X   X 8 X X 
+1 2 3 4 5 6 7   9   
+
+
+

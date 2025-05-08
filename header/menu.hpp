@@ -29,6 +29,9 @@ class Menu {
         void promptpuzzletype();
         //Make default puzzle
         vector<int> makedefault();
+        vector<int> makedefault2();
+        vector<int> makedefault3();
+        vector<int> makedefault4();
         //Prompt user for size of the puzzle. Puzzle will be a size by size tunnel
         void promptpuzzlesize();
         //Prompt user for order of tiles in puzzle if user chooses custom puzzle

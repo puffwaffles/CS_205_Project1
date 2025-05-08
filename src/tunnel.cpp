@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include "../header/tunnel.hpp"
+#include <fstream>
 
 using namespace std;
 
@@ -129,20 +130,20 @@ vector<int> Tunnel::getblanksvec() {
 }
 
 //Convert the coordinates to a location on the vector
-int Tunnel::getloc(vector<int> coordinates) {
+int Tunnel::getloc(int x, int y) {
     int loc = 0;
     //size * y coordinate gives the first soldier on the row the actual soldier is on
     //x coordinate gives the offset of the actual position from the first soldier of that row
-    loc = coordinates.at(0) + size * coordinates.at(1);
+    loc = x + size * y;
     return loc;
 }
 
 //We convert the coordinates into a vector location to extract the value from the vector
-int Tunnel::getnum(vector<int> coordinates) {
+int Tunnel::getnum(int x, int y) {
     int loc = 0;
     int num = 0;
     //Use getloc to retrieve vector location from coordinates
-    loc = getloc(coordinates);
+    loc = getloc(x, y);
     //Access value from vector
     num = tunnelvect.at(loc);
     return num;
@@ -171,208 +172,164 @@ void Tunnel::setblankval(int val, int index) {
 
 //Uses a given blank space. The blank refers to the blank's index in blank vector
 int Tunnel::canswap(int blank, int location) {
+    //Record location of blank
     int swappable = 0;
-    //cout << "Before getblankcoor for " << blank << endl;//
-    //Getting x and y coordinates 
-    //cout << "blank: " << blank << endl;
-    //cout << "blanks size is " << blanks.size() << endl;
-    //cout << "size: " << size << endl;
-    
     int bloc = blanks.at(blank);
-    //cout << "blank value: " << bloc << endl;
-    /*if (location == 4) {
-        //cout << "blank: " << blank << endl;
-        //cout << "blank value: " << bloc << endl;
-    }*/
     int y = bloc / size;
     int x = bloc % size;
     //cout << "After getblankcoor" << endl;//
-    //Using a coordinate vector of x and y so we can use it to extract adjacent values
-    vector<int> coor;
-    coor.resize(2);
-    coor.at(0) = x;
-    coor.at(1) = y;
+    
     int val = 0;
+    //Record how many spaces to slide blank
     int slides = 1;
-    //cout << "x: " << x << endl;
-    //cout << "y: " << y << endl;/**/
 
-    /*if (location == 3) {
-        //cout << "x: " << x << endl;
-        //cout << "y: " << y << endl;
-    }*/
-
+    //Keep iterating until we hit a barrier or a soldier
     while (swappable != -1 && swappable != 1) {
-        //cout << "slides: " << slides << endl;
         //Uses designated location to determine viability for a given direction
         switch (location) {
+            //Swapping up
             case 1:
-                coor.at(1) = y - 1;
-                //cout << "up coor y " << coor.at(1) << endl;
+                y = y - 1;
                 //Two criteria for swapping up: y is on the second row and there is a soldier above (has values from 1 to size). 
-                if (coor.at(1) == 0) {
-                    val = getnum(coor);
+                if (y == 0) {
+                    val = getnum(x, y);
                     if (val > 0 && val <= size) {
-                        //cout << "swappable! " << endl;
                         swappable = 1;
                     }
-                    if (val <= 0) {
+                    //Barrier found
+                    if (val < 0) {
                         swappable = -1;
                     }
                 }
+                //Going out of bounds
                 else {
                     swappable = -1;
                 }
-                //cout << "Up Swappable is " << swappable << endl;
                 break;
-
+            //Swapping down
             case 2:
-                coor.at(1) = y + 1;
-                //cout << "down coor y " << coor.at(1) << endl;
-                //cout << blank << "has y down at " << coor.at(1) << endl;
+                y = y + 1;
                 //Two criteria for swapping up: y is on the first row and there is a soldier below (has values from 1 to size). 
-                if (coor.at(1) == 1) {
-                    val = getnum(coor);
+                if (y == 1) {
+                    val = getnum(x, y);
                     if (val > 0 && val <= size) {
                         swappable = 1;
                     }
-                    if (val <= 0) {
+                    //Barrier found
+                    if (val < 0) {
                         swappable = -1;
                     }
                 }
+                //Going out of bounds
                 else {
                     swappable = -1;
                 }
-                //cout << "Down Swappable is " << swappable << endl;
                 break;
-            
+            //Swapping left
             case 3:
-                coor.at(0) = x - (1 * slides);
-                //cout << "left coor x " << coor.at(0) << endl;
+                x = x - 1;
                 //Two criteria for swapping left: y is not on the first column and there is a soldier to the left (has values from 1 to size). 
-                if (coor.at(0) >= 0 && coor.at(0) < size) {
-                    val = getnum(coor);
-                    //cout << "val is " << val << endl;
+                if (x >= 0 && x < size) {
+                    val = getnum(x, y);
                     if (val > 0 && val < size) {
-                        //cout << "Swappable!" << endl;
                         swappable = 1;
                     }
+                    //Found barrier
                     if (val < 0) {
                         swappable = -1;
                     }
                 }
+                //Going out of bounds
                 else {
                     swappable = -1;
                 }
                 break;
-
+            //Swapping right
             case 4:
-                //cout << "slides: " << slides << endl;
-                coor.at(0) = x + (1 * slides);
-                //cout << "coor x: " << coor.at(0) << endl;
+                x = x + 1;
                 //Two criteria for swapping right: y is not on the last column and there is a soldier to the right (has values from 1 to size). 
-                if (coor.at(0) < size && coor.at(0) > 0) {
-                    val = getnum(coor);
-                    //cout << "val: " << getnum(coor) << endl;
-                    //cout << "Ex val: " << tunnelvect.at(y * size + x + slides) << endl;
+                if (x < size && x > 0) {
+                    val = getnum(x, y);
                     if (val > 0 && val <= size) {
                         swappable = 1;
-                        //cout << "Is swappable" << endl;
                     }
+                    //Found barrier
                     if (val < 0) {
-                        //cout << "Not swappable" << endl;
                         swappable = -1;
                     }
                 }
+                //Going out of bounds
                 else {
-                    //cout << "Not swappable" << endl;
                     swappable = -1;
                 }
                 break;
+            //Default for strange values
             default: 
                 swappable = -1;
                 break; 
         }
+        //If we find a blank, just update slides so we can slide past it
         if (swappable == 0) {
             slides++;
         }
     }
-    //cout << "Swappable before if " << swappable << endl;
+    //If we didn't encounter a barrier or go out of bounds, we return the amount of slides we need to make
     if (swappable != -1) {
         swappable = slides;
     }
-    //cout << "Swappable is " << swappable << endl;
     return swappable;
 }
 
-//blankval is index of blank in blank vector
+//blankval is index of blank in blank vector. Swap blank with soldier value at (x, y)
 void Tunnel::swap(int blankval, int x, int y) {
-    //cout << "In swapper!" << endl;
-    //cout << "In swap" << endl;
+    //Retrieve location of blank in tunnel vector
     int temp = 0;
-    //cout << "new x " << x << endl;
-    //cout << "new y " << y << endl;
     int bloc = blanks.at(blankval);
-    //Calculate coordinates of soldier to be swapped with blank soldier
-    int tempx = (bloc % size) + x;
-    int tempy = (bloc / size) + y;
-    //cout << "tempx " << tempx << endl;
-    //cout << "tempy " << tempy << endl;
-
-
-    //Use coordinates to store these temp coordinates
-    vector<int> coordinates;
-    coordinates.push_back(tempx);
-    coordinates.push_back(tempy);
 
     //Get soldier value 
-    temp = getnum(coordinates);
+    temp = getnum(x, y);
     //cout << "soldier value is " << temp << endl;
 
     //Get the soldier's location in the vector
     int loc = getnumloc(temp);
-    //cout << "loc1 " << loc << endl;
-    //Get the blank's location in the vector
     
     //Set blank's original location to temp's value
     tunnelvect.at(bloc) = temp;
-    //cout << "Value at " << bloc << " is " << tunnelvect.at(bloc) << endl;
     //Set temp's original location to blank's value
     tunnelvect.at(loc) = 0;
-    //cout << "Value at loc " << loc << " is " << tunnelvect.at(loc) << endl;
+    //Update blank's new location in blank vector
     setblankval(loc, blankval);
-    //cout << "Blank " << blankval << " is " << blanks.at(blankval) << " expecting " << loc << endl;
-    //cout << "Finished swap" << endl;
 }
 
+//Swaps soldier in a given location in one direction (Does not account for direction switches). Does nothing if blank can't be swapped
 void Tunnel::swapsoldier(int blank, int location) {
-    //cout << "in swapsoldier" << endl;
+    //Check if blank can be swapped for a given location and retrieve distance to slide blank if it can
     int swappable = canswap(blank, location);
-    //cout << "after can swap" << endl;
-    /*cout << "swappable: " << swappable << endl;
-    //cout << "location: " << location << endl; */
+    //Acquire location of blank and coordinates
+    int bloc = blanks.at(blank);
+    int y = bloc / size;
+    int x = bloc % size;
+
+    //Swap blank if it is swappable in that direction
     if (swappable > 0) {
-        //cout << " We can swap!" << endl;
-        //cout << "Swappable!" << endl;
         switch (location) {
             //Swap blank with soldier above
             case 1:
-                swap(blank, 0, -1);
+                swap(blank, x, y - 1);
                 break;
             //Swap blank with soldier below
             case 2:
-                swap(blank, 0, 1);
+                swap(blank, x, y + 1);
                 break;
             //Swap blank with soldier to the left
             case 3:
-                swap(blank, swappable * -1, 0);
+                swap(blank, x + swappable * -1, y);
                 break;
             //Swap blank with soldier to the right
             case 4:
-                //cout << "Swap made" << endl;
-                swap(blank, swappable, 0);
-                //cout << "After right swap" << endl;
+                swap(blank, x + swappable, y);
                 break;
+            //Default for strange values
             default: 
                 break; 
         }
@@ -386,13 +343,19 @@ void Tunnel::swapsoldier(int blank, int location) {
 void Tunnel::copytunnel(vector<int> tunnel) {
     //Change tunnel contents to vector contents
     tunnelvect = tunnel;
-    //cout << "tunnelvect set" << endl;
-    //Update blank coordinates to blank's position in the vector
+    //Set up blanks vector
     setblank();
 }
 
+void Tunnel::copyblank(vector<int> blank) {
+    //Copy contents of blank vector
+    blanks = blank;
+}
+
+//Prints out layout of tunnel with soldiers, holes and barriers
 void Tunnel::displaytunnel() {
     int place = 0;
+    
     //Print row by row
     for (int j = 0; j < 2; j++) {
         // Print each value in the row separated by a space
@@ -400,7 +363,7 @@ void Tunnel::displaytunnel() {
             //Blanks are 0
             if (tunnelvect.at(place) == 0) {
                 cout << "  ";
-            } 
+            }
             //Barriers have value -1
             else if (tunnelvect.at(place) < 0) {
                 cout << "X" << " ";
@@ -412,5 +375,5 @@ void Tunnel::displaytunnel() {
             place++;
         }
         cout << endl;
-    }   
+    }  
 }

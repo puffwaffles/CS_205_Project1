@@ -1,4 +1,4 @@
-/Users/katelynpoon/Downloads/CS 205 Project/build/CMakeFiles/test.dir
-/Users/katelynpoon/Downloads/CS 205 Project/build/CMakeFiles/solve.dir
-/Users/katelynpoon/Downloads/CS 205 Project/build/CMakeFiles/edit_cache.dir
-/Users/katelynpoon/Downloads/CS 205 Project/build/CMakeFiles/rebuild_cache.dir
+/Users/katelynpoon/Downloads/CS_205_Project1/build/CMakeFiles/test.dir
+/Users/katelynpoon/Downloads/CS_205_Project1/build/CMakeFiles/solve.dir
+/Users/katelynpoon/Downloads/CS_205_Project1/build/CMakeFiles/edit_cache.dir
+/Users/katelynpoon/Downloads/CS_205_Project1/build/CMakeFiles/rebuild_cache.dir

@@ -19,7 +19,22 @@ vector<int> Test::Tunnelmaker1() {
 }
 
 vector<int> Test::Tunnelmaker2() {
-    vector<int> tunnel = {-1, -1, 0, -1, -1, 0, 2, 3, 1, 0};
+    vector<int> tunnel = {-1, -1, 3, -1, -1, 0, 2, 0, 1, 0};
+    return tunnel;
+}
+
+vector<int> Test::Tunnelmaker3() {
+    vector<int> tunnel = {-1, -1, 0, -1, 0, -1, -1, 0, 5, 4, 3, 2, 1, 0};
+    return tunnel;
+}
+
+vector<int> Test::Tunnelmaker4() {
+    vector<int> tunnel = {-1, -1, -1, 0, -1, 0, -1, 0, -1, -1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 1};
+    return tunnel;
+}
+
+vector<int> Test::Tunnelmaker5() {
+    vector<int> tunnel = {-1, -1, -1, 0, -1, 0, -1, 8, -1, -1, 1, 2, 3, 4, 5, 6, 0, 0, 7, 9};
     return tunnel;
 }
 
@@ -98,4 +113,44 @@ void Test::Test2tunnel() {
     cout << "swapping blank " << 1 << " right " << blanksvec.at(1) << endl;
     initial-> gettunnel()-> swapsoldier(1, 4); 
     initial-> gettunnel()-> displaytunnel();    
+}
+
+void Test::Test3tunnel() {
+    int sizes = 7;
+    int soldiers = 5;
+    int blanks = 4;
+    vector<int> v = Tunnelmaker3();
+    cout << "Before graph" << endl;
+    Graph graph = Graph(sizes, soldiers, blanks);
+    cout << "after graph" << endl;
+    graph.setinitialstate(v);
+    cout << "Set initial" << endl;
+    Node* initial = graph.getinitial();
+    initial-> gettunnel()-> displaytunnel();
+    Solver solve;
+    vector<Node*> succs = solve.digger(0, initial, &graph, 2);
+    for (int i = 0; i < succs.size(); i++) {
+        if (succs.at(i) != nullptr) {
+            succs.at(i) -> gettunnel()-> displaytunnel();
+        }
+    }
+}
+
+void Test::Test4tunnel() {
+    int sizes = 10;
+    int soldiers = 9;
+    int blanks = 4;
+    vector<int> v = Tunnelmaker5();
+    Graph graph = Graph(sizes, soldiers, blanks);
+    graph.setinitialstate(v);
+    cout << "Set initial" << endl;
+    Node* initial = graph.getinitial();
+    initial-> gettunnel()-> displaytunnel();
+    Solver solve;
+    vector<Node*> succs = solve.digger(2, initial, &graph, 4);
+    for (int i = 0; i < succs.size(); i++) {
+        if (succs.at(i) != nullptr) {
+            succs.at(i) -> gettunnel()-> displaytunnel();
+        }
+    }
 }

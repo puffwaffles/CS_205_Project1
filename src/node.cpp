@@ -37,22 +37,27 @@ Node::Node(int sizes, int soldier, int blank) {
     hcost = 0;
 }
 
+//Sets the previous node
 void Node::setprev(Node* node) {
     prev = node;
 }
 
+//Sets the directional nodes for each node. Not really used much since it turns out that multiple nodes can apply to the same direction (direction switching)
 void Node::setdirs(Node* node, int direct) {
     dirs.at(direct) = node;
 }
 
+//Changes general cost 
 void Node::setgcost(double add) {
     gcost = add;
 }
 
+//Changes heuristic cost
 void Node::sethcost(double add) {
     hcost = add;
 }
 
+//Set up costs for given heuristic
 void Node::nodecostsetup(int type) {
     double mt = 0;
     double md = 0;
@@ -87,35 +92,42 @@ void Node::nodecostsetup(int type) {
     totalcost = gcost + hcost; 
 }
 
+//Returns size of puzzle in node
 int Node::getsize() {
     return size;
 }
 
+//Returns tunnel for node
 Tunnel* Node::gettunnel() {
     return &tunnel;
 }
 
+//Returns parent node
 Node* Node::getprev() {
     return prev;
 }
 
+//Returns directional nodes but not really used
 Node* Node::getdirs(int direct) {
     return dirs.at(direct);
 }
 
+//Returns total cost 
 double Node::gettotalcost() {
     return totalcost;
 }
 
+//Returns heuristic cost
 double Node::gethcost() {
     return hcost;
 }
 
+//Returns general cost
 double Node::getgcost() {
     return gcost;
 }
 
-//Calculate manhattan distnace for an individual soldier
+//Calculate misplaced tile cost for an individual soldier
 int Node::calcsoldiermth(int val) {
     double mt = 0;
     int loc1 = tunnel.getnumloc(val);
@@ -127,6 +139,7 @@ int Node::calcsoldiermth(int val) {
     return mt;
 }
 
+//Calculates misplaced tile cost for all soldiers
 int Node::calculatemth() {
     double mt = 0;
     for (int i = 1; i < soldiers + 1; i++) {
@@ -136,7 +149,7 @@ int Node::calculatemth() {
 }
 
 
-//Calculate manhattan distnace for an individual soldier
+//Calculate manhattan distance for an individual soldier
 int Node::calcsoldiermdh(int val) {
     double md = 0;
     //Get the coordinates for the soldier value
@@ -153,6 +166,7 @@ int Node::calcsoldiermdh(int val) {
     return md;
 }
 
+//Calculate manhattan distance for all soldiers
 int Node::calculatemdh() {
     double md = 0;
     for (int i = 1; i < soldiers + 1; i++) {
@@ -178,6 +192,7 @@ double Node::calcsoldieredh(int val) {
     return ed;
 }
 
+//Calculate euclidean distance for all soldiers
 double Node::calculateedh() {
     double ed = 0;
     for (int i = 1; i < soldiers + 1; i++) {
@@ -186,6 +201,7 @@ double Node::calculateedh() {
     return ed;
 }
 
+//Check if node has reached goal state by using misplaced heuristic (it should be 0 if it is the goal state)
 bool Node::checkgoal() {
     bool reached = true;
     if (calculatemth() > 0) {
@@ -194,6 +210,7 @@ bool Node::checkgoal() {
     return reached;
 }
 
+//Return the number of blanks for the node
 int Node::getblanks() {
     return blanks;
 }

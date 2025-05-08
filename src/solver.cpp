@@ -9,6 +9,7 @@
 #include "../header/tunnel.hpp"
 #include <vector>
 #include <stack>
+#include <fstream>
 
 //Comparison class to compare nodes by accumulated cost
 class Comparison {
@@ -24,24 +25,300 @@ Solver::Solver() {
 }
 
 void Solver::printsolutionresults(int nodes, int maxpqsize, int goaldepth) {
+    ofstream file;
+    file.open("solutions6.txt", ios::app);
     cout << "To solve this problem the search algorithm expanded a total of " << nodes << " nodes." << endl;
+    file << "To solve this problem the search algorithm expanded a total of " << nodes << " nodes." << endl;
     cout << "The maximum number of nodes in the queue at any one time: " << maxpqsize << "." << endl;
+    file << "The maximum number of nodes in the queue at any one time: " << maxpqsize << "." << endl;
     cout << "The depth of the goal node was " << goaldepth << "." << endl;
+    file << "The depth of the goal node was " << goaldepth << "." << endl;
 }
 
-vector<Node*> Solver::digger(int blank, Node* temp, int direction) {
+vector<Node*> Solver::digger(int blank, Node* temp, Graph* graph, int direction) {
+    vector<int> vt = {-1, -1, -1, 0, -1, 0, -1, 8, -1, -1, 1, 2, 3, 4, 5, 6, 0, 0, 7, 9};
+    if (direction == 3 && temp-> gettunnel()-> gettunnelvect() == vt) {
+        ofstream f;
+        f.open("solutions4.txt", ios::app);
+        f << "blank " << blank << endl;
+        f.close();
+    }
     vector<Node*> succs;
+    //Extract location of blank in vector and vector size
+    int bloc = temp-> gettunnel()-> getblanksvec().at(blank);
+    int size = temp-> gettunnel()-> getsize();
+    //Retrieve x and y 
+    int x = bloc % size;
+    int y = bloc / size;
+    if (direction == 3 && temp-> gettunnel()-> gettunnelvect() == vt) {
+        ofstream f;
+        f.open("solutions4.txt", ios::app);
+        f << "blank is at location " << bloc << endl;
+        f << "blank x: " << x << endl;
+        f << "blank y: " << y << endl;
+        f.close();
+    }
+
+    //Keep track of direction we will be moving 
+    int dir = direction;
+
+    //Create vector for x, y, dir, changes
+    vector<int> v = {x, y, dir, 0};
+
+    
+    //Keep track of avenues we can explore
+    stack<vector<int>> explore;
+    explore.push(v);
+
+    //Vectors for direction avenues. Only 2 per direction since we don't want to backtrack
+    vector<int> updown = {3, 4};
+    vector<int> leftright = {1, 2};
+
+    int val = 0;
+
+    //Condition for deadend
+    bool deadend = false;
+    //Iterate through different viable paths for soldiers
+    while (!explore.empty()) {
+        //Extract avenue as v
+        v = explore.top();
+        x = v.at(0);
+        y = v.at(1);
+        deadend = false;
+        //Keep going in one direction until we can't anymore
+        while (!deadend) {
+            dir = v.at(2);
+            switch(dir) {
+                //Going up
+                case 1:
+                    //Blank must be on bottom row (1)
+                    if (v.at(1) == 1) {
+                        //Look at value above
+                        val = temp-> gettunnel() -> getnum(v.at(0), v.at(1) - 1);
+                        //If we find another blank go up a level
+                        if (val == 0) {
+                            v.at(1)--;
+                        }
+                        //It is a soldier or barrier
+                        else {
+                            //If it is a soldier, create a new node that swaps with this soldier and add it to succs vector
+                            if (val > 0 && val <= temp-> gettunnel() -> getsoldiers()) {
+                                succs.push_back(graph-> addnode2(blank, temp, graph, v.at(0), v.at(1) - 1, dir));
+                            }
+                            //We are done with going in this direction
+                            explore.pop();
+                            
+                            //If we are still our blank, add new avenues to explore
+                            //We also want to stop if we exceed 3 changes since we won't change direction more than 3 times
+                            if (y != v.at(1) && v.at(3) < 3) {
+                                for (int i = 0; i < updown.size(); i++) {
+                                    explore.push({x, v.at(1), updown.at(i), v.at(3) + 1});
+                                }
+                            }
+                            deadend = true;
+                        }
+                    }
+                    //We are going out of bounds
+                    else {
+                        //We are done with going in this direction
+                        explore.pop();
+                        //If we are still our blank, add new avenues to explore
+                        //We also want to stop if we exceed 3 changes since we won't change direction more than 3 times
+                        if (y != v.at(1) && v.at(3) < 3) {
+                            for (int i = 0; i < updown.size(); i++) {
+                                explore.push({x, v.at(1), updown.at(i), v.at(3) + 1});
+                            }
+                        }
+                        deadend = true;
+                    }
+                    break;
+                
+                //Going down
+                case 2:
+                    //Blank must be on top row (0)
+                    if (v.at(1) == 0) {
+                        //Look at value below
+                        val = temp-> gettunnel() -> getnum(v.at(0), v.at(1) + 1);
+                        //If we find another blank go down a level
+                        if (val == 0) {
+                            v.at(1)++;
+                        }
+                        //It is a soldier or barrier
+                        else {
+                            //If it is a soldier, create a new node that swaps with this soldier and add it to succs vector
+                            if (val > 0 && val <= temp-> gettunnel() -> getsoldiers()) {
+                                succs.push_back(graph-> addnode2(blank, temp, graph, v.at(0), v.at(1) + 1, dir));
+                            }
+                            //We are done with going in this direction
+                            explore.pop();
+                            //If we can backtrack to a blank that wasn't our blank, add new avenues to explore
+                            //We also want to stop if we exceed 3 changes since we won't change direction more than 3 times
+                            if (y != v.at(1) && v.at(3) < 3) {
+                                for (int i = 0; i < updown.size(); i++) {
+                                    explore.push({x, v.at(1), updown.at(i), v.at(3) + 1});
+                                }
+                            }
+                            deadend = true;
+                        }
+                    }
+                    //We are going out of bounds
+                    else {
+                        //We are done with going in this direction
+                        explore.pop();
+                        //If we are still our blank, add new avenues to explore
+                        //We also want to stop if we exceed 3 changes since we won't change direction more than 3 times
+                        if (y != v.at(1) && v.at(3) < 3) {
+                            for (int i = 0; i < updown.size(); i++) {
+                                explore.push({x, v.at(1), updown.at(i), v.at(3) + 1});
+                            }
+                        }
+                        deadend = true;
+                    }
+                    break;
+                
+                //Going left
+                case 3:
+                    if (temp-> gettunnel()-> gettunnelvect() == vt) {
+                        ofstream f;
+                        f.open("solutions4.txt", ios::app);
+                        f << "Moving left!" << endl;
+                        f << "At vx: " << v.at(0) << endl;
+                        f << "At vy: " << v.at(1) << endl;
+                        f.close();
+                    }
+                    //Blank must be to the right of the first column (0) 
+                    if (v.at(0) > 0 && v.at(0) <= temp-> gettunnel() -> getsize() - 1) {
+                        //Look at value to the left
+                        val = temp-> gettunnel() -> getnum(v.at(0) - 1, v.at(1));
+                        if (temp-> gettunnel()-> gettunnelvect() == vt) {
+                            ofstream f;
+                            f.open("solutions4.txt", ios::app);
+                            f << "val is " << val << endl;
+                            f.close();
+                        }
+                        //If we find another blank go left a level
+                        if (val == 0) {
+                            v.at(0)--;
+                            if (temp-> gettunnel()-> gettunnelvect() == vt) {
+                                ofstream f;
+                                f.open("solutions4.txt", ios::app);
+                                f << "Moving down 1 step " << endl;
+                                f.close();
+                            }
+                        }
+                        //It is a soldier or barrier
+                        else {
+                            //If it is a soldier, create a new node that swaps with this soldier and add it to succs vector
+                            if (val > 0 && val <= temp-> gettunnel() -> getsoldiers()) {
+                                succs.push_back(graph-> addnode2(blank, temp, graph, v.at(0) - 1, v.at(1), dir));
+                                if (temp-> gettunnel()-> gettunnelvect() == vt) {
+                                    ofstream f;
+                                    f.open("solutions4.txt", ios::app);
+                                    f << "Found a soldier. Added soldier" << endl;
+
+                                    f.close();
+                                }
+                            }
+                            //We are done with going in this direction
+                            explore.pop();
+                            
+                            //If we can backtrack to a blank that wasn't our blank, add new avenues to explore
+                            //We also want to stop if we exceed 3 changes since we won't change direction more than 3 times
+                            if (x != v.at(0) && v.at(3) < 3) {
+                                for (int i = 0; i < leftright.size(); i++) {
+                                    explore.push({v.at(0), y, leftright.at(i), v.at(3) + 1});
+                                }
+                            }
+                            deadend = true;
+                        }
+                    }
+                    //We are going out of bounds
+                    else {
+                        if (temp-> gettunnel()-> gettunnelvect() == vt) {
+                            ofstream f;
+                            f.open("solutions4.txt", ios::app);
+                            f << "Went out of bounds!" << endl;
+
+                            f.close();
+                        }
+                        //We are done with going in this direction
+                        explore.pop();
+                        //If we are still our blank, add new avenues to explore
+                        //We also want to stop if we exceed 3 changes since we won't change direction more than 3 times
+                        if (x != v.at(0) && v.at(3) < 3) {
+                            for (int i = 0; i < leftright.size(); i++) {
+                                explore.push({v.at(0), y, leftright.at(i), v.at(3) + 1});
+                            }
+                        }
+                        deadend = true;
+                    }
+                    break;
+                //Going right
+                case 4: 
+                    //Blank must be to the left of the last column (size - 1) 
+                    if (v.at(0) >= 0 && v.at(0) < temp-> gettunnel() -> getsize() - 1) {
+                        //Look at value to the right
+                        val = temp-> gettunnel() -> getnum(v.at(0) + 1, v.at(1));
+                        //If we find another blank go right a level
+                        if (val == 0) {
+                            v.at(0)++;
+                        }
+                        //It is a soldier or barrier
+                        else {
+                            //If it is a soldier, create a new node that swaps with this soldier and add it to succs vector
+                            if (val > 0 && val <= temp-> gettunnel() -> getsoldiers()) {
+                                succs.push_back(graph-> addnode2(blank, temp, graph, v.at(0) + 1, v.at(1), dir));
+                            }
+                            //We are done with going in this direction
+                            explore.pop();
+                            //If we can backtrack to a blank that wasn't our blank, add new avenues to explore
+                            //We also want to stop if we exceed 3 changes since we won't change direction more than 3 times
+                            if (x != v.at(0) && v.at(3) < 3) {
+                                for (int i = 0; i < leftright.size(); i++) {
+                                    explore.push({v.at(0), y, leftright.at(i), v.at(3) + 1});
+                                }
+                            }
+                            deadend = true;
+                        }
+                    }
+                    //We are going out of bounds
+                    else {
+                        //We are done with going in this direction
+                        explore.pop();
+                        //If we are still our blank, add new avenues to explore
+                        //We also want to stop if we exceed 3 changes since we won't change direction more than 3 times
+                        if (x != v.at(0) && v.at(3) < 3) {
+                            for (int i = 0; i < leftright.size(); i++) {
+                                explore.push({v.at(0), y, leftright.at(i), v.at(3) + 1});
+                            }
+                        }
+                        deadend = true;
+                    }
+                    break;
+
+                default:
+                    explore.pop();
+                    deadend = true;
+                    break;
+            }
+        }
+
+    }
+
     return succs;
 }
 
-bool Solver::algorithm(Graph* graph, Visitedstates* visited, int heuristic) {
+bool Solver::algorithm2(Graph* graph, Visitedstates* visited, int heuristic) {
+    ofstream file;
+    file.open("solutions6.txt", ios::app);
+    
+    if (!file) {
+        cout << "Can't open file" << endl;
+    }
     bool hassolution = false;
-    //cout << "Num blanks in graph: "  << graph -> getblanks() << endl;
     //Get the initial state node of the graph
     graph-> getinitial() -> nodecostsetup(heuristic);
     Node* initial = graph-> getinitial();
-    //cout << "initial blank size: " << initial -> gettunnel() -> getblanksvec().size() << endl;
-    //cout << "Num blanks in initial: "  << initial -> getblanks() << endl;
     //Priority queue to hold nodes to be sorted by node cost
     priority_queue<Node*, vector<Node*>, Comparison> pq;
     //Initialize priority queue
@@ -61,8 +338,10 @@ bool Solver::algorithm(Graph* graph, Visitedstates* visited, int heuristic) {
     int goaldepth = 0;
     //First time expanding state
     cout << "Expanding state" << endl;
+    file << "Expanding state" << endl;
     initial-> gettunnel()-> displaytunnel();
     cout << endl;
+    file << endl;
     while (!pq.empty()) {
         //Update maxpqsize if it exceeds the previous value
         if (pq.size() > maxpqsize) {
@@ -74,11 +353,16 @@ bool Solver::algorithm(Graph* graph, Visitedstates* visited, int heuristic) {
         if (nodes < 1) {
             nodes++;
         }
+        if (temp-> gettotalcost() > 28) {
+            break;
+        }
         //Check if the node is the goal solution. We break out of the loop once we find the goal node and indicate that we have a solution
         if (temp-> checkgoal()) {
             goaldepth = temp-> getgcost();
             cout << endl;
+            file << endl;
             cout << "Goal!!!" << endl;
+            file << "Goal!!!" << endl;
             hassolution = true;
             printsolution(temp);
             break;
@@ -90,58 +374,61 @@ bool Solver::algorithm(Graph* graph, Visitedstates* visited, int heuristic) {
         }
         //Otherwise, we can print this display of the best state to expand to and find successor nodes for that state
         else {
+            cout << endl;
+            file << endl;
             cout << "The best state to expand with g(n) = " << temp-> getgcost() << " and h(n) = " << temp-> gethcost() << " is" << endl;
+            file << "The best state to expand with g(n) = " << temp-> getgcost() << " and h(n) = " << temp-> gethcost() << " is" << endl;
+             
             temp-> gettunnel()-> displaytunnel();
+            
+            
+            
             cout << endl;
             cout << endl;
-            /*//Just want to compare results at diamter.
-            if (temp-> getgcost() > 3) {
-                break;
-            }*/
+            file << endl;
+            file << endl;
             //Pop that node off 
             pq.pop();
             cout << "Expanding this node..." << endl;
+            file << "Expanding this node..." << endl;
             //Add the successor node as one of the nodes we expanded to
             nodes++;
-            //cout << "Blanks size in solver is: " << blanks.size() << endl;
-            //cout << "Getting blank values is fine" << endl;
             
-            //Iterate through the successor nodes of temp. First iterate through each blank
             vector<int> blanks = temp -> gettunnel() -> getblanksvec();
+
+            //Vector for successor nodes
+            vector<Node*> succs;
+            //First iterate through each blank
             for (int j = 0; j < blanks.size(); j++) {
 
                 //Then iterate through each direction for each blank
                 for (int i = 0; i < 4; i++) {
+                    //Collect all viable successors for the given direction and blank
+                    succs = digger(j, temp, graph, i + 1);
                     
-                    /*if (i + 1 == 4) {
-                        cout << "Checking right swap" << endl;
-                    }*/
-                    
-                    //Create the successor node for each move i (up, down, left, right). If no such move exists or if the successor is the same state as the node's previous node, the successor node will be rendered as null
-                    succ = graph-> addnode(j, temp, i + 1);
-                    //cout << j << " " << i << " succ is fine" << endl;
-                    
-                    //Make sure succ state exists
-                    if (succ != nullptr) {
-                        //Set up costs for succ using gcost based on designated heuristic
-                        succ-> nodecostsetup(heuristic); 
-                        //Check if successor has been added to the visited map  
-                        if (!(visited-> checkstate(succ-> gettunnel()-> gettunnelvect()))) {
-                            //cout << "New state! " << endl;
-                            //succ-> gettunnel()-> displaytunnel();
-                            //cout << "g(n) = " << succ-> getgcost() << " and h(n) = " << succ-> gethcost() << " is" << endl;
-                            //Add this new state to the map
-                            visited-> addstate(succ -> gettunnel()-> gettunnelvect(), *succ);
-                            //Add this new node to the priority queue
-                            pq.push(succ);
-                        }
-                        else {
-                            // Then check if successor's total cost is less than the same state node
-                            if (visited-> getvisited()-> at(succ-> gettunnel()-> gettunnelvect()).gettotalcost() > (succ-> gettotalcost())) {
-                                //Replace the more costly state with this cheaper state
+                    //Iterate through successors 
+                    for (int k = 0; k < succs.size(); k++) {
+                        //Access successor node from vector. If no such move exists or if the successor is the same state as the node's previous node, the successor node will be rendered as null
+                        succ = succs.at(k);
+                        //Make sure succ state exists
+                        if (succ != nullptr) {
+                            //Set up costs for succ using gcost based on designated heuristic
+                            succ-> nodecostsetup(heuristic); 
+                            //Check if successor has been added to the visited map  
+                            if (!(visited-> checkstate(succ-> gettunnel()-> gettunnelvect()))) {
+                                //Add this new state to the map
                                 visited-> addstate(succ -> gettunnel()-> gettunnelvect(), *succ);
-                                //Add this cheaper node to the priority queue
+                                //Add this new node to the priority queue
                                 pq.push(succ);
+                            }
+                            else {
+                                // Then check if successor's total cost is less than the same state node
+                                if (visited-> getvisited()-> at(succ-> gettunnel()-> gettunnelvect()).gettotalcost() > (succ-> gettotalcost())) {
+                                    //Replace the more costly state with this cheaper state
+                                    visited-> addstate(succ -> gettunnel()-> gettunnelvect(), *succ);
+                                    //Add this cheaper node to the priority queue
+                                    pq.push(succ);
+                                }
                             }
                         }
                     }
@@ -153,32 +440,32 @@ bool Solver::algorithm(Graph* graph, Visitedstates* visited, int heuristic) {
             maxpqsize = pq.size();
         } 
     }
+    file.close();/**/
     //If there was a solution, print these results
     printsolutionresults(nodes, maxpqsize, goaldepth);
     return hassolution;
 }
 
+//Prints out the solution for the problem if it exists
 void Solver::printsolution(Node* goalnode) {
     Node* temp = nullptr;
     temp = goalnode;
     stack<Node*> steps;
+    //Going backwards from goal node, we add each previous node to stack. This puts each step in order
     while (temp != nullptr) {
         steps.push(temp);
         temp = temp-> getprev();
     }
+    //Print out the solution starting from the original puzzle form and listing each step
     cout << "Solution: " << endl;
     cout << "\nOriginal problem: " << endl;
     cout << endl;
+    //Acquire original solution and display it
     temp = steps.top();
     temp-> gettunnel()-> displaytunnel();
     steps.pop();
-    int step = 0;/*
-    if (!steps.empty()) {
-        temp = steps.top();
-        temp-> gettunnel()-> displaytunnel();
-        steps.pop();
-        cout << endl;
-    }*/
+    int step = 0;
+    //Iterate through solution steps and display them
     while (!steps.empty()) {
         step++;
         cout << step << "." << endl;

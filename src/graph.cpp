@@ -19,24 +19,20 @@ Graph::Graph(int size, int soldier, int blanks) {
     goal = Node(puzzlesize, numsoldiers, numblanks);
 }
 
+//Initializes initial state for graph
 void Graph::setinitialstate(vector<int> initialstate) {
+    //Establish puzzle size, number of soldiers, and number of blanks for tunnel in initial state
     *(initial.gettunnel()) = Tunnel(puzzlesize, numsoldiers, numblanks);
-    /*(initial.gettunnel()) -> setsize(puzzlesize);
-    cout << "set size" << endl;
-    (initial.gettunnel()) -> setsoldiers(numsoldiers);
-    cout << "set soldiers" << endl;
-    (initial.gettunnel()) -> setblanks(numblanks);
-    cout << "set blanks" << endl;*/
     //Get the tunnel of the initial state and set the tunnel vector to copy the initial state vector
     (initial.gettunnel()) -> copytunnel(initialstate);
 }
 
+//Initializes goal state for graph
 void Graph::setgoalstate(vector<int> goalstate) {
+    //Establish puzzle size, number of soldiers, and number of blanks for tunnel in goal state
+    *(goal.gettunnel()) = Tunnel(puzzlesize, numsoldiers, numblanks);
     //Get the tunnel of the goal state and set the tunnel vector to copy the goal state vector
     (goal.gettunnel()) -> copytunnel(goalstate);
-    (goal.gettunnel()) -> setsize(puzzlesize);
-    (goal.gettunnel()) -> setsoldiers(numsoldiers);
-    (goal.gettunnel()) -> setblanks(numblanks);
 }
 
 Node* Graph::getinitial() {
@@ -49,42 +45,34 @@ Node* Graph::getgoal() {
     return &goal;
 }
 
-Node* Graph::addnode(int blankval, Node* node, int move) {
+//Modified version of original addnode that supports the digger function in solver class
+//This one uses swap directly since digger function already determines if swap is viable
+Node* Graph::addnode2(int blankval, Node* node, Graph* graph, int x, int y, int move) {
     //Create new successor node
     Node* succ = nullptr;
-    //cout << "In addnode" << endl;
-    //If the successor node can be accessed as a move swap
-    if ((node-> gettunnel()) -> canswap(blankval, move)) {
-        //cout << "canswap function is fine" << endl;
-        //Create a new node for successor
-        succ = new Node(puzzlesize, numsoldiers, numblanks);
-        //Set successor's previous node to node
-        succ -> setprev(node);
-        //Copy the previous node's tunnel
-        succ -> gettunnel() -> copytunnel(node-> gettunnel()-> gettunnelvect());
-        //cout << "copied tunnel" << endl;
-        //cout << "blankval: " << blankval << endl;
-        //Perform the swap based on the given node
-        succ -> gettunnel() -> swapsoldier(blankval, move);
-        //cout << "swapsoldier function is fine" << endl;
-        //Check if the swapped node isn't the previous node of node
-        //We do not want to create another copy of an already visited node
-        if (node-> getprev() != nullptr && (node-> getprev()-> gettunnel() -> gettunnelvect() == succ-> gettunnel() -> gettunnelvect())) {
-            succ-> setprev(nullptr);
-            succ = nullptr;
-        }
-        //Otherwise, proceed to making the successor node
-        else {
-            //Set up gcost
-            succ -> setgcost((succ -> getprev()) -> getgcost() + 1);
-        }
+    //Create a new node for successor
+    succ = new Node(puzzlesize, numsoldiers, numblanks);
+    //Set successor's previous node to node
+    succ -> setprev(node);
+    //Copy the previous node's tunnel
+    succ -> gettunnel() -> copytunnel(node-> gettunnel()-> gettunnelvect());
+    succ -> gettunnel() -> copyblank(node-> gettunnel()-> getblanksvec());
+    int newloc = node-> gettunnel()-> getblanksvec().at(blankval);
+    succ -> gettunnel() -> swap(blankval, x, y);
+    //We do not want to create another copy of an already visited node
+    if (node-> getprev() != nullptr && (node-> getprev()-> gettunnel() -> gettunnelvect() == succ-> gettunnel() -> gettunnelvect())) {
+        succ-> setprev(nullptr);
+        succ = nullptr;
     }
-    //cout << "Created node" << endl;
-    //Set up the corresponding successor node pointer for node
-    node-> setdirs(succ, move - 1);
+    //Otherwise, proceed to making the successor node
+    else {
+        //Set up gcost
+        succ -> setgcost((succ -> getprev()) -> getgcost() + 1);
+    }
     return succ;
 }
 
+//returns blanks for graph
 int Graph::getblanks() {
     return numblanks;
 }

@@ -44,9 +44,9 @@ class Tunnel {
         //Get coodinates of a designated Blank. The coordinates should have 0
         int getblankloc(int num);
         //Get tunnel location for given coordinates. 
-        int getloc(vector<int> coordinates);
+        int getloc(int x, int y);
         //Get number for given coordinates. Blanks are 0 and solid barriers are -1
-        int getnum(vector<int> coordinates);
+        int getnum(int x, int y);
         //Get tunnel with numbers in order
         vector<int> gettunnelvect();
         //Preset blank values
@@ -60,6 +60,8 @@ class Tunnel {
         void swapsoldier(int blank, int location);
         //Set values in the tunnel to an existing tunnel
         void copytunnel(vector<int> tunnel);
+        //Copy blank vector
+        void copyblank(vector<int> blanks);
         //Show tunnel
         void displaytunnel();
         //Show location of inputted number.
