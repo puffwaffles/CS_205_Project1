@@ -15,9 +15,9 @@ class Node {
         Tunnel tunnel;
         Node* prev;
         vector <Node*> dirs;
-        double totalcost;
-        double gcost;
-        double hcost; 
+        float totalcost;
+        float gcost;
+        float hcost; 
 
 
     public:
@@ -28,11 +28,11 @@ class Node {
         //Set up the state node of the blank in a given direction. If no node exists, value is null
         void setdirs(Node* node, int direct);
         //Set up the total cost of the node to another value
-        void settotalcost(double add);
+        void settotalcost(float add);
         //Set up the path cost (gcost)
-        void setgcost(double add);
+        void setgcost(float add);
         //Set up the heuristic cost (hcost)
-        void sethcost(double add);
+        void sethcost(float add);
         //Set up total cost based on type of heuristic
         void nodecostsetup(int type);
         //Return the size of the tunnel
@@ -44,19 +44,19 @@ class Node {
         //Return the state node of the blank moving in a given direction. If no node exists, value is null
         Node* getdirs(int direct);
         //Return the total cost of the state node
-        double gettotalcost();
+        float gettotalcost();
         //Return the path cost of the state node (gcost)
-        double getgcost();
+        float getgcost();
         //Return the heuristic cost of the state node (hcost)
-        double gethcost();
+        float gethcost();
         //Calculate the heuristic cost using the misplaced soldier heuristic for a soldier
         int calcsoldiermth(int val);
         //Calculate the heuristic cost using the misplaced tile heuristic
         int calculatemth();
         //Calculate the heuristic cost using the euclidean heuristic for a soldier
-        double calcsoldieredh(int val);
+        float calcsoldieredh(int val);
         //Calculate the heuristic cost using the euclidean heuristic
-        double calculateedh();
+        float calculateedh();
         //Calculate the heuristic cost using the manhattan heuristic for a soldier
         int calcsoldiermdh(int val);
         //Calculate the heuristic cost using the manhattan heuristic

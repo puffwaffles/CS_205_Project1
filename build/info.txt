@@ -1,0 +1,101 @@
+2 men in a trench
+Solution Results for Uniform Cost algorithm: 
+To solve this problem the search algorithm expanded a total of 9 nodes.
+The maximum number of nodes in the queue at any one time: 4.
+The depth of the goal node was 3.
+2 men in a trench
+Solution Results for A* Misplaced Tile algorithm: 
+To solve this problem the search algorithm expanded a total of 5 nodes.
+The maximum number of nodes in the queue at any one time: 5.
+The depth of the goal node was 3.
+2 men in a trench
+Solution Results for A* Manhattan Distance for Leader algorithm: 
+To solve this problem the search algorithm expanded a total of 7 nodes.
+The maximum number of nodes in the queue at any one time: 5.
+The depth of the goal node was 3.
+2 men in a trench
+Solution Results for A* Manhattan Distance algorithm: 
+To solve this problem the search algorithm expanded a total of 4 nodes.
+The maximum number of nodes in the queue at any one time: 4.
+The depth of the goal node was 3.
+2 men in a trench
+Solution Results for A* Euclidean Distance algorithm: 
+To solve this problem the search algorithm expanded a total of 4 nodes.
+The maximum number of nodes in the queue at any one time: 4.
+The depth of the goal node was 3.
+3 men in a trench
+Solution Results for Uniform Cost algorithm: 
+To solve this problem the search algorithm expanded a total of 101 nodes.
+The maximum number of nodes in the queue at any one time: 22.
+The depth of the goal node was 8.
+3 men in a trench
+Solution Results for A* Misplaced Tile algorithm: 
+To solve this problem the search algorithm expanded a total of 60 nodes.
+The maximum number of nodes in the queue at any one time: 24.
+The depth of the goal node was 8.
+3 men in a trench
+Solution Results for A* Manhattan Distance for Leader algorithm: 
+To solve this problem the search algorithm expanded a total of 57 nodes.
+The maximum number of nodes in the queue at any one time: 31.
+The depth of the goal node was 8.
+3 men in a trench
+Solution Results for A* Manhattan Distance algorithm: 
+To solve this problem the search algorithm expanded a total of 67 nodes.
+The maximum number of nodes in the queue at any one time: 18.
+The depth of the goal node was 8.
+3 men in a trench
+Solution Results for A* Euclidean Distance algorithm: 
+To solve this problem the search algorithm expanded a total of 52 nodes.
+The maximum number of nodes in the queue at any one time: 19.
+The depth of the goal node was 8.
+5 men in a trench
+Solution Results for Uniform Cost algorithm: 
+To solve this problem the search algorithm expanded a total of 14549 nodes.
+The maximum number of nodes in the queue at any one time: 1789.
+The depth of the goal node was 20.
+5 men in a trench
+Solution Results for A* Misplaced Tile algorithm: 
+To solve this problem the search algorithm expanded a total of 10188 nodes.
+The maximum number of nodes in the queue at any one time: 2345.
+The depth of the goal node was 20.
+5 men in a trench
+Solution Results for A* Manhattan Distance for Leader algorithm: 
+To solve this problem the search algorithm expanded a total of 13733 nodes.
+The maximum number of nodes in the queue at any one time: 2904.
+The depth of the goal node was 20.
+5 men in a trench
+Solution Results for A* Manhattan Distance algorithm: 
+To solve this problem the search algorithm expanded a total of 11733 nodes.
+The maximum number of nodes in the queue at any one time: 4525.
+The depth of the goal node was 21.
+5 men in a trench
+Solution Results for A* Euclidean Distance algorithm: 
+To solve this problem the search algorithm expanded a total of 10565 nodes.
+The maximum number of nodes in the queue at any one time: 4960.
+The depth of the goal node was 25.
+7 men in a trench
+Solution Results for Uniform Cost algorithm: 
+To solve this problem the search algorithm expanded a total of 319554 nodes.
+The maximum number of nodes in the queue at any one time: 95941.
+The depth of the goal node was 21.
+7 men in a trench
+Solution Results for A* Misplaced Tile algorithm: 
+To solve this problem the search algorithm expanded a total of 28860 nodes.
+The maximum number of nodes in the queue at any one time: 20336.
+The depth of the goal node was 21.
+7 men in a trench
+Solution Results for A* Manhattan Distance for Leader algorithm: 
+To solve this problem the search algorithm expanded a total of 42983 nodes.
+The maximum number of nodes in the queue at any one time: 28895.
+The depth of the goal node was 21.
+7 men in a trench
+Solution Results for A* Manhattan Distance algorithm: 
+To solve this problem the search algorithm expanded a total of 17372 nodes.
+The maximum number of nodes in the queue at any one time: 9549.
+The depth of the goal node was 0.
+7 men in a trench
+Solution Results for A* Euclidean Distance algorithm: 
+To solve this problem the search algorithm expanded a total of 19201 nodes.
+The maximum number of nodes in the queue at any one time: 10861.
+The depth of the goal node was 0.
+7 men in a trench

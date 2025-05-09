@@ -25,12 +25,50 @@ void Menu::promptpuzzletype() {
     switch(puzzletype) {
         //Create default puzzle
         case 1:
-            makedefault2();
+            promptdefault();
             break;
         //Prompt user for puzzle contents
         case 2:
             promptpuzzlesize();
             promptpuzzle();
+            break;
+        default:
+            cout << "Error: invalid input" << endl;
+            break;
+    }
+}
+
+void Menu::promptdefault() {
+    cout << "Default puzzle options" << endl;
+    cout << "1. 2 soldiers" << endl;
+    cout << "2. 3 soldiers" << endl;
+    cout << "3. 5 soldiers" << endl;
+    cout << "4. 7 soldiers" << endl;
+    cout << "5. 9 soldiers" << endl;
+
+    cout << "Please choose one of the default puzzles to solve (1-5): ";
+    int def = 0;
+    cin >> def;
+    switch(def) {
+        //2 soldiers
+        case 1:
+            makedefault2();
+            break;
+        //3 soldiers
+        case 2:
+            makedefault3();
+            break;
+        //5 soldiers
+        case 3:
+            makedefault();
+            break;
+        //7 soldiers
+        case 4:
+            makedefault5();
+            break;
+        //9 soldiers
+        case 5:
+            makedefault4();
             break;
         default:
             cout << "Error: invalid input" << endl;
@@ -44,6 +82,8 @@ vector<int> Menu::makedefault() {
     soldiers = 5;
     blanks = 4;
     //Hard coded 5 soldiers in a trench puzzle
+    //X X   X   X X
+    //  2 3 4 5 1
     vector<int> tunnel = {-1, -1, 0, -1, 0, -1, -1, 0, 5, 4, 3, 2, 1, 0};
     initial = tunnel;
     return tunnel;
@@ -55,6 +95,8 @@ vector<int> Menu::makedefault2() {
     soldiers = 2;
     blanks = 2;
     //Hard coded 2 soldiers in a trench puzzle
+    //X   X  
+    //  2 1 
     vector<int> tunnel = {-1, 0, -1, 0, 2, 1};
     initial = tunnel;
     return tunnel;
@@ -66,6 +108,8 @@ vector<int> Menu::makedefault3() {
     soldiers = 3;
     blanks = 3;
     //Hard coded 3 soldiers in a trench puzzle
+    //X X   X X   
+    //  2 3 1  
     vector<int> tunnel = {-1, -1, 0, -1, -1, 0, 2, 3, 1, 0};
     initial = tunnel;
     return tunnel;
@@ -77,7 +121,22 @@ vector<int> Menu::makedefault4() {
     soldiers = 9;
     blanks = 4;
     //Hard coded 9 soldiers in a trench puzzle
+    //X X X   X   X   X X
+    //  2 3 4 5 6 7 8 9 1
     vector<int> tunnel = {-1, -1, -1, 0, -1, 0, -1, 0, -1, -1, 0, 2, 3, 4, 5, 6, 7, 8, 9, 1};
+    initial = tunnel;
+    return tunnel;
+}
+
+vector<int> Menu::makedefault5() {
+    puzzlesize = 9;
+    initial.resize(puzzlesize * 2);
+    soldiers = 7;
+    blanks = 4;
+    //Hard coded 7 soldiers in a trench puzzle
+    //X X X   X   X X X
+    //  2 3 4 5 6 7 1  
+    vector<int> tunnel = {-1, -1, -1, 0, -1, 0, -1, -1, -1, 0, 2, 3, 4, 5, 6, 7, 1, 0};
     initial = tunnel;
     return tunnel;
 }

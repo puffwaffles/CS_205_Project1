@@ -48,20 +48,20 @@ void Node::setdirs(Node* node, int direct) {
 }
 
 //Changes general cost 
-void Node::setgcost(double add) {
+void Node::setgcost(float add) {
     gcost = add;
 }
 
 //Changes heuristic cost
-void Node::sethcost(double add) {
+void Node::sethcost(float add) {
     hcost = add;
 }
 
 //Set up costs for given heuristic
 void Node::nodecostsetup(int type) {
-    double mt = 0;
-    double md = 0;
-    double ed = 0;
+    float mt = 0;
+    float md = 0;
+    float ed = 0;
     switch (type) {
         //1 indicates uniform cost as the only cost
         case 1:
@@ -113,23 +113,23 @@ Node* Node::getdirs(int direct) {
 }
 
 //Returns total cost 
-double Node::gettotalcost() {
+float Node::gettotalcost() {
     return totalcost;
 }
 
 //Returns heuristic cost
-double Node::gethcost() {
+float Node::gethcost() {
     return hcost;
 }
 
 //Returns general cost
-double Node::getgcost() {
+float Node::getgcost() {
     return gcost;
 }
 
 //Calculate misplaced tile cost for an individual soldier
 int Node::calcsoldiermth(int val) {
-    double mt = 0;
+    float mt = 0;
     int loc1 = tunnel.getnumloc(val);
     int loc2 = val + size - 1;
     //Check if both location values match. If they don't, mt = 1
@@ -141,7 +141,7 @@ int Node::calcsoldiermth(int val) {
 
 //Calculates misplaced tile cost for all soldiers
 int Node::calculatemth() {
-    double mt = 0;
+    float mt = 0;
     for (int i = 1; i < soldiers + 1; i++) {
         mt = mt + calcsoldiermth(i);
     }
@@ -151,7 +151,7 @@ int Node::calculatemth() {
 
 //Calculate manhattan distance for an individual soldier
 int Node::calcsoldiermdh(int val) {
-    double md = 0;
+    float md = 0;
     //Get the coordinates for the soldier value
     vector<int> currcoor =  tunnel.getnumcoor(val);
     //All soldiers should be a column soldier value - 1 at the end
@@ -168,7 +168,7 @@ int Node::calcsoldiermdh(int val) {
 
 //Calculate manhattan distance for all soldiers
 int Node::calculatemdh() {
-    double md = 0;
+    float md = 0;
     for (int i = 1; i < soldiers + 1; i++) {
         md = md + calcsoldiermdh(i);
     }
@@ -176,14 +176,14 @@ int Node::calculatemdh() {
 }
 
 //Calculate euclidean distnace for an individual soldier
-double Node::calcsoldieredh(int val) {
-    double ed = 0.0;
+float Node::calcsoldieredh(int val) {
+    float ed = 0.0;
     //Get the coordinates for the soldier value
     vector<int> currcoor =  tunnel.getnumcoor(val);
     //All soldiers should be a column soldier value - 1 at the end
-    double changex = (val - 1) * 1.0;
+    float changex = (val - 1) * 1.0;
     //All soldiers should be at y = 1 at the end. 
-    double changey = 1.0;
+    float changey = 1.0;
     //Calculate absolute value of change in x
     changex = pow((currcoor.at(0) - changex), 2) * 1.0;
     //Calculate absolute value of change in y
@@ -193,8 +193,8 @@ double Node::calcsoldieredh(int val) {
 }
 
 //Calculate euclidean distance for all soldiers
-double Node::calculateedh() {
-    double ed = 0;
+float Node::calculateedh() {
+    float ed = 0;
     for (int i = 1; i < soldiers + 1; i++) {
         ed = ed + calcsoldieredh(i);
     }

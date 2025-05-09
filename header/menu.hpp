@@ -27,11 +27,14 @@ class Menu {
         Graph* getgraph();
         //Prompt user for either default puzzle or custom puzzle
         void promptpuzzletype();
+        //Prompt default puzzle
+        void promptdefault();
         //Make default puzzle
         vector<int> makedefault();
         vector<int> makedefault2();
         vector<int> makedefault3();
         vector<int> makedefault4();
+        vector<int> makedefault5();
         //Prompt user for size of the puzzle. Puzzle will be a size by size tunnel
         void promptpuzzlesize();
         //Prompt user for order of tiles in puzzle if user chooses custom puzzle

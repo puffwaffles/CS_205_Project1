@@ -10,6 +10,7 @@
 #include <vector>
 #include <stack>
 #include <fstream>
+#include <chrono>
 
 //Comparison class to compare nodes by accumulated cost
 class Comparison {
@@ -25,24 +26,19 @@ Solver::Solver() {
 }
 
 void Solver::printsolutionresults(int nodes, int maxpqsize, int goaldepth) {
-    ofstream file;
-    file.open("solutions6.txt", ios::app);
     cout << "To solve this problem the search algorithm expanded a total of " << nodes << " nodes." << endl;
-    file << "To solve this problem the search algorithm expanded a total of " << nodes << " nodes." << endl;
     cout << "The maximum number of nodes in the queue at any one time: " << maxpqsize << "." << endl;
-    file << "The maximum number of nodes in the queue at any one time: " << maxpqsize << "." << endl;
     cout << "The depth of the goal node was " << goaldepth << "." << endl;
-    file << "The depth of the goal node was " << goaldepth << "." << endl;
+    ofstream f;
+    f.open("info.txt", ios::app);
+    f << "To solve this problem the search algorithm expanded a total of " << nodes << " nodes." << endl;
+    f << "The maximum number of nodes in the queue at any one time: " << maxpqsize << "." << endl;
+    f << "The depth of the goal node was " << goaldepth << "." << endl;
+    f.close();
 }
 
 vector<Node*> Solver::digger(int blank, Node* temp, Graph* graph, int direction) {
     vector<int> vt = {-1, -1, -1, 0, -1, 0, -1, 8, -1, -1, 1, 2, 3, 4, 5, 6, 0, 0, 7, 9};
-    if (direction == 3 && temp-> gettunnel()-> gettunnelvect() == vt) {
-        ofstream f;
-        f.open("solutions4.txt", ios::app);
-        f << "blank " << blank << endl;
-        f.close();
-    }
     vector<Node*> succs;
     //Extract location of blank in vector and vector size
     int bloc = temp-> gettunnel()-> getblanksvec().at(blank);
@@ -50,14 +46,6 @@ vector<Node*> Solver::digger(int blank, Node* temp, Graph* graph, int direction)
     //Retrieve x and y 
     int x = bloc % size;
     int y = bloc / size;
-    if (direction == 3 && temp-> gettunnel()-> gettunnelvect() == vt) {
-        ofstream f;
-        f.open("solutions4.txt", ios::app);
-        f << "blank is at location " << bloc << endl;
-        f << "blank x: " << x << endl;
-        f << "blank y: " << y << endl;
-        f.close();
-    }
 
     //Keep track of direction we will be moving 
     int dir = direction;
@@ -178,46 +166,19 @@ vector<Node*> Solver::digger(int blank, Node* temp, Graph* graph, int direction)
                 
                 //Going left
                 case 3:
-                    if (temp-> gettunnel()-> gettunnelvect() == vt) {
-                        ofstream f;
-                        f.open("solutions4.txt", ios::app);
-                        f << "Moving left!" << endl;
-                        f << "At vx: " << v.at(0) << endl;
-                        f << "At vy: " << v.at(1) << endl;
-                        f.close();
-                    }
                     //Blank must be to the right of the first column (0) 
                     if (v.at(0) > 0 && v.at(0) <= temp-> gettunnel() -> getsize() - 1) {
                         //Look at value to the left
                         val = temp-> gettunnel() -> getnum(v.at(0) - 1, v.at(1));
-                        if (temp-> gettunnel()-> gettunnelvect() == vt) {
-                            ofstream f;
-                            f.open("solutions4.txt", ios::app);
-                            f << "val is " << val << endl;
-                            f.close();
-                        }
                         //If we find another blank go left a level
                         if (val == 0) {
                             v.at(0)--;
-                            if (temp-> gettunnel()-> gettunnelvect() == vt) {
-                                ofstream f;
-                                f.open("solutions4.txt", ios::app);
-                                f << "Moving down 1 step " << endl;
-                                f.close();
-                            }
                         }
                         //It is a soldier or barrier
                         else {
                             //If it is a soldier, create a new node that swaps with this soldier and add it to succs vector
                             if (val > 0 && val <= temp-> gettunnel() -> getsoldiers()) {
                                 succs.push_back(graph-> addnode2(blank, temp, graph, v.at(0) - 1, v.at(1), dir));
-                                if (temp-> gettunnel()-> gettunnelvect() == vt) {
-                                    ofstream f;
-                                    f.open("solutions4.txt", ios::app);
-                                    f << "Found a soldier. Added soldier" << endl;
-
-                                    f.close();
-                                }
                             }
                             //We are done with going in this direction
                             explore.pop();
@@ -234,13 +195,6 @@ vector<Node*> Solver::digger(int blank, Node* temp, Graph* graph, int direction)
                     }
                     //We are going out of bounds
                     else {
-                        if (temp-> gettunnel()-> gettunnelvect() == vt) {
-                            ofstream f;
-                            f.open("solutions4.txt", ios::app);
-                            f << "Went out of bounds!" << endl;
-
-                            f.close();
-                        }
                         //We are done with going in this direction
                         explore.pop();
                         //If we are still our blank, add new avenues to explore
@@ -309,12 +263,7 @@ vector<Node*> Solver::digger(int blank, Node* temp, Graph* graph, int direction)
 }
 
 bool Solver::algorithm2(Graph* graph, Visitedstates* visited, int heuristic) {
-    ofstream file;
-    file.open("solutions6.txt", ios::app);
-    
-    if (!file) {
-        cout << "Can't open file" << endl;
-    }
+    auto begin = chrono::high_resolution_clock::now();
     bool hassolution = false;
     //Get the initial state node of the graph
     graph-> getinitial() -> nodecostsetup(heuristic);
@@ -338,10 +287,8 @@ bool Solver::algorithm2(Graph* graph, Visitedstates* visited, int heuristic) {
     int goaldepth = 0;
     //First time expanding state
     cout << "Expanding state" << endl;
-    file << "Expanding state" << endl;
     initial-> gettunnel()-> displaytunnel();
     cout << endl;
-    file << endl;
     while (!pq.empty()) {
         //Update maxpqsize if it exceeds the previous value
         if (pq.size() > maxpqsize) {
@@ -360,9 +307,7 @@ bool Solver::algorithm2(Graph* graph, Visitedstates* visited, int heuristic) {
         if (temp-> checkgoal()) {
             goaldepth = temp-> getgcost();
             cout << endl;
-            file << endl;
             cout << "Goal!!!" << endl;
-            file << "Goal!!!" << endl;
             hassolution = true;
             printsolution(temp);
             break;
@@ -375,9 +320,7 @@ bool Solver::algorithm2(Graph* graph, Visitedstates* visited, int heuristic) {
         //Otherwise, we can print this display of the best state to expand to and find successor nodes for that state
         else {
             cout << endl;
-            file << endl;
             cout << "The best state to expand with g(n) = " << temp-> getgcost() << " and h(n) = " << temp-> gethcost() << " is" << endl;
-            file << "The best state to expand with g(n) = " << temp-> getgcost() << " and h(n) = " << temp-> gethcost() << " is" << endl;
              
             temp-> gettunnel()-> displaytunnel();
             
@@ -385,12 +328,9 @@ bool Solver::algorithm2(Graph* graph, Visitedstates* visited, int heuristic) {
             
             cout << endl;
             cout << endl;
-            file << endl;
-            file << endl;
             //Pop that node off 
             pq.pop();
             cout << "Expanding this node..." << endl;
-            file << "Expanding this node..." << endl;
             //Add the successor node as one of the nodes we expanded to
             nodes++;
             
@@ -440,9 +380,47 @@ bool Solver::algorithm2(Graph* graph, Visitedstates* visited, int heuristic) {
             maxpqsize = pq.size();
         } 
     }
-    file.close();/**/
+    //Record end of algorithm and find time elapsed
+    auto end = chrono::high_resolution_clock::now();
+    auto elapsed = chrono::duration_cast<chrono::milliseconds>(end -  begin);
+    
+    string algo = "";
+    switch (heuristic) {
+        //1 indicates uniform cost as the only cost
+        case 1:
+            algo = "Uniform Cost";
+            break;
+        //2 indicates A* cost with misplaced tile (soldier) heuristic
+        case 2: 
+            algo = "A* Misplaced Tile";
+            break;
+        //3 indicates A* cost with manhattan heuristic between leader and starting spot
+        case 3: 
+        algo = "A* Manhattan Distance for Leader";
+            break;
+
+        //4 indicates A* cost with manhattan heuristic for all soldiers
+        case 4: 
+            algo = "A* Manhattan Distance";
+            break;
+        //5 indicates A* cost with euclidean heuristic
+        default:
+            algo = "A* Euclidean Distance";
+            break;
+    } 
+    cout << "Time taken for " << algo << " algorithm: " << elapsed.count() << " milliseconds" << endl;
     //If there was a solution, print these results
+    ofstream f;
+    f.open("info.txt", ios::app);
+    f << graph-> getinitial()-> gettunnel()-> getsoldiers() << " men in a trench" << endl;
+    f << "Solution Results for " << algo << " algorithm: " << endl;
     printsolutionresults(nodes, maxpqsize, goaldepth);
+    f.close();
+    ofstream file;
+    file.open("Timesheet.txt", ios::app);
+    file << graph-> getinitial()-> gettunnel()-> getsoldiers() << " men in a trench" << endl;
+    file << "Time taken for " << algo << " algorithm: " << elapsed.count() << " milliseconds" << endl;
+    file.close();/**/
     return hassolution;
 }
 

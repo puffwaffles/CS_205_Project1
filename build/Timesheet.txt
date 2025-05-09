@@ -1,0 +1,41 @@
+3 men in a trench
+Time taken for Uniform Cost algorithm: 24 milliseconds
+3 men in a trench
+Time taken for A* Misplaced Tile algorithm: 17 milliseconds
+3 men in a trench
+Time taken for A* Manhattan Distance for Leader algorithm: 18 milliseconds
+3 men in a trench
+Time taken for A* Manhattan Distance algorithm: 19 milliseconds
+3 men in a trench
+Time taken for A* Euclidean Distance algorithm: 14 milliseconds
+2 men in a trench
+Time taken for Uniform Cost algorithm: 2 milliseconds
+2 men in a trench
+Time taken for A* Misplaced Tile algorithm: 2 milliseconds
+2 men in a trench
+Time taken for A* Manhattan Distance for Leader algorithm: 1 milliseconds
+2 men in a trench
+Time taken for A* Manhattan Distance algorithm: 1 milliseconds
+2 men in a trench
+Time taken for A* Euclidean Distance algorithm: 1 milliseconds
+5 men in a trench
+Time taken for Uniform Cost algorithm: 2188 milliseconds
+5 men in a trench
+Time taken for A* Misplaced Tile algorithm: 1637 milliseconds
+5 men in a trench
+Time taken for A* Manhattan Distance for Leader algorithm: 2224 milliseconds
+5 men in a trench
+Time taken for A* Manhattan Distance algorithm: 1992 milliseconds
+5 men in a trench
+Time taken for A* Euclidean Distance algorithm: 1787 milliseconds
+7 men in a trench
+Time taken for Uniform Cost algorithm: 61766 milliseconds
+7 men in a trench
+Time taken for A* Misplaced Tile algorithm: 5067 milliseconds
+7 men in a trench
+Time taken for A* Manhattan Distance for Leader algorithm: 7667 milliseconds
+7 men in a trench
+Time taken for A* Manhattan Distance algorithm: 3189 milliseconds
+7 men in a trench
+Time taken for A* Euclidean Distance algorithm: 3560 milliseconds
+
